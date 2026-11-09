@@ -1,0 +1,1 @@
+This is my repository for MLOps Assignment 2. More of a project than an assignment, to be honest.
