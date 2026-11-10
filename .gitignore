@@ -6,3 +6,4 @@ dvc-toy/
 toy_loss.png
 mlflow.db
 mlruns/
+*.keras
