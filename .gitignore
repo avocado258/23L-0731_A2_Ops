@@ -1,1 +1,8 @@
 .env
+__pycache__/
+data/
+figures/
+dvc-toy/
+toy_loss.png
+mlflow.db
+mlruns/
