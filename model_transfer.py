@@ -7,6 +7,7 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 import mlflow, mlflow.tensorflow
 import subprocess, numpy as np, random
 import matplotlib.pyplot as plt
+import yaml
 from pipeline import train_ds, val_ds
 
 tf.random.set_seed(42)
@@ -56,6 +57,10 @@ if __name__ == "__main__":
 
     git_commit = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip()
 
+    with open("data/raw.dvc") as f:
+        dvc_info = yaml.safe_load(f)
+        dvc_hash = dvc_info["outs"][0]["md5"]
+
     model, base = build_transfer_model()
     model.compile(optimizer=tf.keras.optimizers.Adam(1e-3),
                   loss="binary_crossentropy", metrics=["accuracy", "AUC"])
@@ -70,8 +75,9 @@ if __name__ == "__main__":
     ]
 
     with mlflow.start_run(run_name="transfer_stage1_frozen"):
-        mlflow.log_param("git_commit", git_commit)
-        mlflow.log_param("seed", 42)
+        mlflow.set_tag("git_commit", git_commit)
+        mlflow.set_tag("seed", 42)
+        mlflow.set_tag("dvc_data_version", dvc_hash)
         history1 = model.fit(train_ds, validation_data=val_ds, epochs=10, callbacks=callbacks_stage1)
         best_epoch1 = np.argmin(history1.history["val_loss"]) + 1
         mlflow.log_metric("best_epoch", best_epoch1)
@@ -96,8 +102,9 @@ if __name__ == "__main__":
     ]
 
     with mlflow.start_run(run_name="transfer_stage2_finetune"):
-        mlflow.log_param("git_commit", git_commit)
-        mlflow.log_param("seed", 42)
+        mlflow.set_tag("git_commit", git_commit)
+        mlflow.set_tag("seed", 42)
+        mlflow.set_tag("dvc_data_version", dvc_hash)
         history2 = model.fit(train_ds, validation_data=val_ds, epochs=10, callbacks=callbacks_stage2)
         best_epoch2 = np.argmin(history2.history["val_loss"]) + 1
         mlflow.log_metric("best_epoch", best_epoch2)

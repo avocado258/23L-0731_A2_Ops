@@ -4,6 +4,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 import mlflow, mlflow.keras
 import subprocess, numpy as np, random
+import yaml
 from pipeline import train_ds, val_ds
 
 load_dotenv()
@@ -13,6 +14,10 @@ mlflow.set_experiment("visionguard")
 tf.random.set_seed(42)
 np.random.seed(42)
 random.seed(42)
+
+with open("data/raw.dvc") as f:
+    dvc_info = yaml.safe_load(f)
+dvc_hash = dvc_info["outs"][0]["md5"]
 
 def build_cnn(input_shape=(224,224,3)):
     model = models.Sequential([
@@ -51,9 +56,10 @@ if __name__ == "__main__":
             "lr": 1e-3,
             "batch_size": 32,
             "img_size": 224,
-            "seed": 42
         })
-        mlflow.log_param("git_commit", git_commit)
+        mlflow.set_tag("git_commit", git_commit)
+        mlflow.set_tag("seed", 42)
+        mlflow.set_tag("dvc_data_version", dvc_hash)
 
         model = build_cnn()
         model.summary()
