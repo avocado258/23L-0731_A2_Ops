@@ -1,0 +1,4 @@
+[core]
+    remote = dagshub-storage
+['remote "dagshub-storage"']
+    url = https://dagshub.com/avocado258/23L-0731_A2_Ops.dvc
