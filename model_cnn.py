@@ -1,8 +1,14 @@
+from dotenv import load_dotenv
+import os
 import tensorflow as tf
 from tensorflow.keras import layers, models
 import mlflow, mlflow.keras
 import subprocess, numpy as np, random
 from pipeline import train_ds, val_ds
+
+load_dotenv()
+mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
+mlflow.set_experiment("visionguard")
 
 tf.random.set_seed(42)
 np.random.seed(42)
