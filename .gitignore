@@ -9,3 +9,7 @@ mlruns/
 tuner_toy/
 tuner_vg/
 models/
+big.jpg
+fake.jpg
+notes.txt
+instance/

@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block body %}
+<h1>Verdict: {{ r.label }}</h1>
+<p class="big">Confidence: {{ "%.1f"|format(r.confidence*100) }}%</p>
+<p>File: {{ filename }} · Model: {{ r.model }}</p>
+<p class="caveat">Caveat: this is a statistical estimate from a model with limited accuracy
+(validation AUC ≈ 0.87). Confidence is the model's score, not a calibrated probability.
+Do not treat it as proof of origin.</p>
+<a href="{{ url_for('index') }}">Analyze another</a>{% endblock %}

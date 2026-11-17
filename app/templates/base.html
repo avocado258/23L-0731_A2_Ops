@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VisionGuard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><nav><b>VisionGuard</b>
+<a href="{{ url_for('index') }}">Upload</a>
+<a href="{{ url_for('history') }}">History</a></nav>
+<main>{% block body %}{% endblock %}</main></body></html>
