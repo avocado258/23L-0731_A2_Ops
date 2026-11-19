@@ -8,7 +8,10 @@ NAME, ALIAS = "visionguard-model", "champion"
 OUT = pathlib.Path(os.getenv("MODEL_DIR", "models/champion"))
 OUT.mkdir(parents=True, exist_ok=True)
 
-mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
+uri = os.environ.get("MLFLOW_TRACKING_URI", "")
+if not uri:
+    raise SystemExit("MLFLOW_TRACKING_URI is empty - check the GitHub Actions secret")
+mlflow.set_tracking_uri(uri)
 mv = MlflowClient().get_model_version_by_alias(NAME, ALIAS)
 model = mlflow.keras.load_model(f"models:/{NAME}@{ALIAS}")
 model.save(OUT / "model.keras")
