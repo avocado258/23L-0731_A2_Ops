@@ -1,7 +1,12 @@
-import io, json, pathlib, sys
+import io
+import json
+import pathlib
+import sys
+
 import numpy as np
 import tensorflow as tf
 from PIL import Image, UnidentifiedImageError
+
 from app import config
 
 SIZE = (224, 224)
@@ -57,4 +62,4 @@ def get_predictor() -> Predictor:
 if __name__ == "__main__":      # console evidence: python -m app.inference a.jpg b.jpg
     pr = get_predictor()
     for f in sys.argv[1:]:
-        print(f, pr.predict(open(f, "rb").read()))
+        print(f, pr.predict(pathlib.Path(f).read_bytes()))

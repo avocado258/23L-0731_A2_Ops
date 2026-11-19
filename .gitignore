@@ -2,13 +2,13 @@
 __pycache__/
 figures/
 dvc-toy/
+ci-toy/
 toy_loss.png
 mlflow.db
 mlruns/
 *.keras
 tuner_toy/
 tuner_vg/
-models/
 big.jpg
 fake.jpg
 notes.txt

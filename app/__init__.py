@@ -1,10 +1,12 @@
 import logging
+
 from flask import Flask, render_template, request
 from sqlalchemy import text
 from werkzeug.utils import secure_filename
+
 from app import config
-from app.db import db, Prediction
-from app.inference import get_predictor, ImageDecodeError
+from app.db import Prediction, db
+from app.inference import ImageDecodeError, get_predictor
 
 ALLOWED_EXT = {"png", "jpg", "jpeg", "webp"}
 

@@ -1,0 +1,14 @@
+{
+  "model_name": "visionguard-model",
+  "model_version": "1",
+  "run_id": "1b011818b5d3455ca4f35663bc23670e",
+  "alias": "champion",
+  "input_size": 224,
+  "threshold": 0.5377716422080994,
+  "label_map": {
+    "AiArtData": 0,
+    "RealArt": 1
+  },
+  "threshold_method": "youden_j_val",
+  "val_auc": 0.8721747388414056
+}
