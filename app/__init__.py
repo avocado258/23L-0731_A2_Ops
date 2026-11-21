@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from app import config
 from app.db import Prediction, db
 from app.inference import ImageDecodeError, get_predictor
+from app.remote import RemoteError, build_remote
 
 ALLOWED_EXT = {"png", "jpg", "jpeg", "webp"}
 
@@ -19,7 +20,7 @@ def create_app():
     db.init_app(app)
     with app.app_context():
         db.create_all()
-    app.predictor = get_predictor()          # loaded once at startup
+    app.predictor = build_remote() if config.INFERENCE_API_URL else get_predictor()
 
     def error(code, title, msg):
         return render_template("error.html", code=code, title=title, msg=msg), code
@@ -43,6 +44,11 @@ def create_app():
         except ImageDecodeError:
             return error(422, "Image could not be read",
                          "The file looks like an image but is corrupt or cannot be decoded.")
+        except RemoteError as e:
+            app.logger.error("inference API error: %s", e)
+            return error(502, "Model service unavailable",
+                         "The model API did not respond correctly. If it was idle it can take "
+                         "about a minute to wake up, so please try again.")
         db.session.add(Prediction(filename=name, label=res["label"],
                                   confidence=res["confidence"], p_real=res["p_real"],
                                   threshold=res["threshold"], model_name=res["model"]))
